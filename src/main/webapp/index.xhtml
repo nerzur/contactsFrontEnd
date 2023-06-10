@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Created by IntelliJ IDEA.
+  contact: Nerzur
+  Date: 26/03/2023
+  Time: 05:51PM
+-->
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="jakarta.faces.facelets" xmlns:h="jakarta.faces.html"
+      xmlns:p="http://primefaces.org/ui" xmlns:f="jakarta.faces.core">
+
+<body>
+<ui:composition template="Template.xhtml">
+
+    <ui:define name="title">
+        Admin Contacts
+    </ui:define>
+
+    <ui:define name="content">
+
+        #{contactsBean.init()}
+
+        <h:form id="form">
+            <p:growl id="messages" showDetail="true"/>
+
+            <p:toolbar>
+                <p:toolbarGroup>
+                    <p:commandButton value="Add" icon="pi pi-plus"
+                                     oncomplete="PF('addContactDialog').show()"
+                                     styleClass="ui-button-success" style="margin-right: .5rem">
+                        <p:resetInput target=":dialogs:add-contact-content"/>
+                    </p:commandButton>
+                </p:toolbarGroup>
+                <p:toolbarGroup align="right">
+                    <p:commandButton title="Print" style="margin-right: 10px" icon="pi pi-print"
+                                     styleClass="ui-button ui-button-secondary" ajax="false">
+                        <p:printer target="dt-contact"/>
+                    </p:commandButton>
+                </p:toolbarGroup>
+            </p:toolbar>
+
+            <p:dataTable tableStyleClass="table-striped" id="dt-contact" widgetVar="dtContact" var="contact"
+                         value="#{contactsBean.contactList}" size="small"
+                         emptyMessage="No contacts found with given criteria"
+                         reflow="true"
+                         paginator="true" rows="10"
+                         paginatorPosition="bottom">
+                <f:facet name="header">
+                    <div class="contact-table-header">
+                        <span class="filter-container ui-input-icon-left"> <i class="pi pi-search"></i>
+                        <p:inputText id="globalFilter" onkeyup="PF('dtContact').filter()" placeholder="Search"/>
+                    </span>
+                    </div>
+                </f:facet>
+                <p:column exportHeaderValue="Id" headerText="Id" sortOrder="asc">
+                    <h:outputText value="#{contact.id}"/>
+                </p:column>
+                <p:column exportHeaderValue="First Name" headerText="First Name">
+                    <h:outputText value="#{contact.firstName}"/>
+                </p:column>
+                <p:column exportHeaderValue="Second Name" headerText="Second Name">
+                    <h:outputText value="#{contact.secondName}"/>
+                </p:column>
+                <p:column exportHeaderValue="Birthdate" headerText="BirthDate">
+                    <h:outputText value="#{contact.birthDate}"/>
+                </p:column>
+                <p:column exportHeaderValue="Personal Photo" headerText="Personal Photo">
+                    <img align="middle" src="#{contact.personalPhoto}" width="48" height="48" alt=""/>
+                </p:column>
+                <p:column exportable="false">
+                    <p:commandButton icon="pi pi-info-circle"
+                                     oncomplete="PF('infoContactdialog').show()"
+                                     actionListener="#{contactsBean.updateSelectedContact(contact)}"
+                                     styleClass="rounded-button ui-button-info" process="@this"
+                                     title="Informaci&oacute;n"
+                                     update="dialogs:info-contact-content">
+                    </p:commandButton>
+                    <p:commandButton icon="pi pi-pencil"
+                                     style="margin-left: 10px"
+                                     oncomplete="PF('editcontactDialog').show()"
+                                     styleClass="edit-button rounded-button ui-button-warning" process="@this">
+                        <p:resetInput target=":dialogs:edit-contact-content"/>
+                    </p:commandButton>
+                </p:column>
+
+            </p:dataTable>
+
+            <input type="hidden"
+                   name="${_csrf.parameterName}"
+                   value="${_csrf.token}"/>
+        </h:form>
+
+        <h:form id="dialogs">
+            <!--Info Dialog-->
+            <p:dialog header="Information" showEffect="fade" modal="true" width="700px"
+                      widgetVar="infoContactdialog"
+                      responsive="true">
+                <p:outputPanel id="info-contact-content" class="ui-fluid">
+                    <p:outputPanel>
+                        <img class="profile-photo" src="#{contactsBean.contactSelected.contact.personalPhoto}" alt="photo"/>
+                        <br/>
+                        <div class="row">
+                            <div class="col col-sm-5 col-lg-3">
+                                <strong><h:outputLabel value="First Name: "/></strong>
+                            </div>
+                            <div class="col col-sm-5 col-lg-9">
+                                <h:outputText
+                                        value="#{contactsBean.contactSelected.contact.firstName}"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col col-sm-5 col-lg-3">
+                                <strong><h:outputLabel value="Second Name: "/></strong>
+                            </div>
+                            <div class="col col-sm-5 col-lg-9">
+                                <h:outputText
+                                        value="#{contactsBean.contactSelected.contact.secondName}"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col col-sm-5 col-lg-3">
+                                <strong><h:outputLabel value="Birthdate: "/></strong>
+                            </div>
+                            <div class="col col-sm-5 col-lg-9">
+                                <h:outputText
+                                        value="#{contactsBean.contactSelected.contact.birthDate}"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col col-sm-5 col-lg-3">
+                                <strong><h:outputLabel value="Phone Numbers: "/></strong>
+                            </div>
+                            <div class="col col-sm-5 col-lg-9">
+                                <ui:repeat value="#{contactsBean.contactSelected.phoneNumbers}" var="phoneNumbers">
+                                    <p:outputLabel style="margin-top: 2px; margin-right: 2px"
+                                                   value="- #{phoneNumbers.phoneNumber}"/> <br/>
+                                </ui:repeat>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col col-sm-5 col-lg-3">
+                                <strong><h:outputLabel value="Addresses: "/></strong>
+                            </div>
+                            <div class="col col-sm-5 col-lg-9">
+                                <ui:repeat value="#{contactsBean.contactSelected.addresses}" var="address">
+                                    <p:outputLabel style="margin-top: 2px; margin-right: 2px"
+                                                   value="- #{address.address}"/> <br/>
+                                </ui:repeat>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+                </p:outputPanel>
+
+                <f:facet name="footer">
+                    <p:commandButton value="Close" icon="pi pi-times" onclick="PF('infoContactdialog').hide()"
+                                     class="ui-button-secondary" type="button"/>
+                </f:facet>
+            </p:dialog>
+            <!--/Info Dialog-->
+        </h:form>
+
+    </ui:define>
+</ui:composition>
+</body>
+
+</html>
