@@ -32,7 +32,7 @@
                     <p:commandButton value="Add" icon="pi pi-plus"
                                      oncomplete="PF('addContactDialog').show()"
                                      styleClass="ui-button-success" style="margin-right: .5rem">
-                        <p:resetInput target=":dialogs:add-contact-content"/>
+                        <p:resetInput target="add-contact-content"/>
                     </p:commandButton>
                 </p:toolbarGroup>
                 <p:toolbarGroup align="right">
@@ -85,6 +85,11 @@
                                      styleClass="edit-button rounded-button ui-button-warning" process="@this">
                         <p:resetInput target=":dialogs:edit-contact-content"/>
                     </p:commandButton>
+                    <p:commandButton id="delete-products-button"
+                                     style="margin-left: 10px"
+                                     icon="pi pi-trash" actionListener="#{contactsBean.updateSelectedContact(contact)}"
+                                     styleClass="rounded-button ui-button-danger" update="@this" oncomplete="PF('deleteProductDialog').show()">
+                    </p:commandButton>
                 </p:column>
 
             </p:dataTable>
@@ -101,7 +106,8 @@
                       responsive="true">
                 <p:outputPanel id="info-contact-content" class="ui-fluid">
                     <p:outputPanel>
-                        <img class="profile-photo" src="#{contactsBean.contactSelected.contact.personalPhoto}" alt="photo"/>
+                        <img class="profile-photo" src="#{contactsBean.contactSelected.contact.personalPhoto}"
+                             alt="photo"/>
                         <br/>
                         <div class="row">
                             <div class="col col-sm-5 col-lg-3">
@@ -162,6 +168,109 @@
             </p:dialog>
             <!--/Info Dialog-->
         </h:form>
+
+        <h:form id="form1">
+            <!--Add Dialog-->
+            <p:dialog header="Add Contact" width="700" height="400" showEffect="fade" modal="true"
+                      widgetVar="addContactDialog"
+                      responsive="true">
+                <p:outputPanel id="add-contact-content" class="ui-fluid">
+
+                    <p:outputPanel>
+
+
+                        <p:growl id="messages1" showDetail="true"/>
+
+                        <div class="row">
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col col-sm-4">
+                                <strong><h:outputLabel for="firstName"
+                                                       value="First Name *"/></strong><br/>
+                                <p:inputText id="firstName" value="#{contactsBean.firstName}"
+                                             required="true" showIcon="true">
+                                    <f:validateLength maximum="250"/>
+                                </p:inputText>
+                            </div>
+                            <div class="col col-sm-4">
+                                <strong><h:outputLabel for="secondName"
+                                                       value="Second Name *"/></strong><br/>
+                                <p:inputText id="secondName" value="#{contactsBean.secondName}"
+                                             required="true" showIcon="true">
+                                    <f:validateLength maximum="250"/>
+                                </p:inputText>
+                            </div>
+                            <div class="col col-sm-4">
+                                <strong><h:outputLabel for="dateBirth"
+                                                       value="Datebirth *"/></strong><br/>
+                                <p:datePicker id="dateBirth" value="#{contactsBean.dateBirth}" required="true"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col col-sm-12">
+                                <strong><h:outputLabel for="address"
+                                                       value="Addresses *"/></strong><br/>
+                                <p:chips unique="true" autocomplete="true" id="address"
+                                         value="#{contactsBean.addressList}" required="true"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col col-sm-12">
+                                <strong><h:outputLabel for="phoneNumber"
+                                                       value="Phone Number *"/></strong><br/>
+                                <p:chips unique="true" autocomplete="true" id="phoneNumber"
+                                         value="#{contactsBean.phoneNumberList}" required="true"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col col-sm-12">
+                                <strong><h:outputLabel for="picture"
+                                                       value="Personal Photo *"/></strong><br/>
+                                <p:fileUpload mode="advanced"
+                                              id="picture"
+                                              required="true"
+                                              multiple="false"
+                                              sizeLimit="102400" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"
+                                              invalidSizeMessage="Maximum file size allowed is 100 KB"
+                                              invalidFileMessage="only gif | jpg | jpeg | png is allowed"
+                                              update="messages1"
+                                              listener="#{contactsBean.handleFileUpload}"/></div>
+                        </div>
+
+
+                    </p:outputPanel>
+
+                </p:outputPanel>
+
+                <f:facet name="footer">
+                    <p:commandButton value="Save" icon="pi pi-check"
+                                     id="btnAddModal"
+                                     update="add-contact-content form:messages"
+                                     process="form1 @this"
+                                     action="#{contactsBean.saveContact}"/>
+                    <p:commandButton value="Close" icon="pi pi-times" onclick="PF('addContactDialog').hide()"
+                                     class="ui-button-secondary" type="button"/>
+                </f:facet>
+            </p:dialog>
+
+            <p:confirmDialog widgetVar="deleteProductDialog" showEffect="fade" width="300"
+                             message="Delete the product?" header="Confirm" severity="warn">
+                <p:commandButton value="Yes" icon="pi pi-check" actionListener="#{contactsBean.deleteContact()}"
+                                 process="@this"
+                                 oncomplete="PF('deleteProductDialog').hide()" />
+                <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="pi pi-times"
+                                 onclick="PF('deleteProductDialog').hide()" />
+            </p:confirmDialog>
+
+            <p:confirmDialog global="true" showEffect="fade" width="300">
+                <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-secondary"
+                                 icon="pi pi-times" />
+            </p:confirmDialog>
+        </h:form>
+        <!--/Add Dialog-->
 
     </ui:define>
 </ui:composition>

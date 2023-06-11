@@ -13,6 +13,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpResponse;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 public class ContactRest {
 
@@ -50,5 +51,32 @@ public class ContactRest {
         return contactRestDb;
     }
 
+    //send request to add the product details.
+    public boolean createFullContact(ContactRequest contactRequest) throws Exception {
+        String inputJson = null;
+        inputJson = JSONUtils.covertFromObjectToJson(contactRequest);
+        HttpRequest request = HttpRequest.newBuilder(URI.create(serviceURL+"/createFullContact"))
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(inputJson)).build();
+        CompletableFuture<HttpResponse<String>> response = client.sendAsync(request,HttpResponse.BodyHandlers.ofString());
+        if (response.get().statusCode() == 200)
+            return true;
+        else
+            throw new Exception(response.get().body());
+    }
+
+    //send request to add the product details.
+    public boolean deleteFullContact(ContactRequest contactRequest) throws Exception {
+        String inputJson = null;
+        inputJson = JSONUtils.covertFromObjectToJson(contactRequest);
+        HttpRequest request = HttpRequest.newBuilder(URI.create(serviceURL+"/deleteFullContact"))
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(inputJson)).build();
+        CompletableFuture<HttpResponse<String>> response = client.sendAsync(request,HttpResponse.BodyHandlers.ofString());
+        if (response.get().statusCode() == 200)
+            return true;
+        else
+            throw new Exception(response.get().body());
+    }
 
 }
