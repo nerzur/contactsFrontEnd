@@ -18,7 +18,7 @@
 
     <groupId>com.nerzur.examples</groupId>
     <artifactId>ContactsFrontEnd</artifactId>
-    <version>0.5.0</version>
+    <version>0.6.0</version>
 
     <properties>
         <maven.compiler.source>18</maven.compiler.source>
