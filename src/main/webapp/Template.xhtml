@@ -21,7 +21,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-    <title>SIGENU-EaD :: <ui:insert name="title"> Inicio </ui:insert></title>
+    <title>Contacs :: <ui:insert name="title"> Inicio </ui:insert></title>
 
     <!-- plugins:css -->
     <link rel="stylesheet" href="#{request.contextPath}/resources/css/feather.css"/>
@@ -59,38 +59,6 @@
 
 <h:body id="body">
 
-    <script>
-        PrimeFaces.locales['es'] = {
-            closeText: 'Cerrar',
-            prevText: 'Anterior',
-            nextText: 'Siguiente',
-            monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-            monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-            dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
-            dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
-            dayNamesMin: ['D', 'L', 'M', 'X', 'J', 'V', 'S'],
-            weekHeader: 'Semana',
-            firstDay: 1,
-            isRTL: false,
-            showMonthAfterYear: false,
-            yearSuffix: '',
-            timeOnlyTitle: 'Sólo hora',
-            timeText: 'Tiempo',
-            hourText: 'Hora',
-            minuteText: 'Minuto',
-            secondText: 'Segundo',
-            millisecondText: 'Milisegundo',
-            currentText: 'Fecha actual',
-            ampm: false,
-            month: 'Mes',
-            week: 'Semana',
-            day: 'Día',
-            allDayText: 'Todo el día',
-            today: 'Hoy',
-            clear: 'Claro'
-        };
-    </script>
-
     <div class="container-scroller">
         <!-- partial:../../partials/_navbar.html -->
         <nav style="z-index: 100;"
@@ -103,11 +71,11 @@
                     </button>
                 </div>
                 <div>
-                    <a class="navbar-brand brand-logo" href="#{request.contextPath}/pages/index.xhtml">
-                        <img src="#{request.contextPath}/resources/img/logo.png" alt="logo"/>
+                    <a class="navbar-brand brand-logo" href="#{request.contextPath}/index.xhtml">
+                        <img src="#{request.contextPath}/resources/img/user.png" alt="logo"/>
                     </a>
-                    <a class="navbar-brand brand-logo-mini" href="#{request.contextPath}/pages/index.xhtml">
-                        <img src="#{request.contextPath}/resources/img/logo.png" alt="logo"/>
+                    <a class="navbar-brand brand-logo-mini" href="#{request.contextPath}/index.xhtml">
+                        <img src="#{request.contextPath}/resources/img/user.png" alt="logo"/>
                     </a>
                 </div>
             </div>
@@ -117,20 +85,18 @@
                     <li class="nav-item">
 
                         <h:form id="search_global">
-                            <p:growl id="search_global_growl" allowDismiss="true"/>
+                            <p:growl id="search_global_growl" allowDismiss="true" showDetail="true" showSummary="true"/>
                             <div class="ui-inputgroup">
                                 <p:inputText
-                                        value=""
-                                        placeholder="Identificaci&oacute;n"
+                                        value="#{contactsBean.name}"
+                                        placeholder="Search"
                                         style="height: 32px; width: 120px; background: transparent; border: none;
                                         border-bottom: 1px solid #009440"
-                                        validatorMessage="ERROR: Debe introducir un CI v&aacute;lido">
-                                    <f:validateRegex pattern="\d{11}"/>
-                                    <f:validateLength maximum="11"/>
-                                    <f:validateLength minimum="11"/>
+                                        validatorMessage="ERROR: Name is invalid">
                                 </p:inputText>
-                                <p:commandButton id="btnSearch_global" update="search_global"
+                                <p:commandButton id="btnSearch_global" update="search_global form:dt-contact"
                                                  icon="pi pi-search"
+                                                 actionListener="#{contactsBean.search()}"
                                                  style="height: 32px; color: #009440; z-index: 3; margin-left: -10px"
                                                  styleClass="ui-button-success ui-button-flat"/>
                             </div>
@@ -140,49 +106,6 @@
                         </h:form>
                     </li>
 
-                    <li class="nav-item dropdown user-dropdown">
-                        <a class="nav-link" id="UserDropdown" href="#" data-toggle="dropdown" data-bs-toggle="dropdown"
-                           aria-expanded="false">
-                            <img class="img-xs rounded-circle" src="#{request.contextPath}/resources/img/user.png"
-                                 width="auto" height="100%"
-                                 alt="Profile image"/>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right navbar-dropdown" style="max-width: 250px"
-                             aria-labelledby="UserDropdown">
-                            <div class="dropdown-header text-center">
-                                <img class="img-xs rounded-circle" src="#{request.contextPath}/resources/img/user.png"
-                                     alt="Profile image"/>
-                                <p class="mb-1 mt-3 font-weight-semibold"> USER </p>
-                                <p class="fw-light text-muted mb-0">MAIL</p>
-                            </div>
-                            <a href="#{request.contextPath}/pages/Perfil.xhtml" class="dropdown-item ui-button-flat"><i
-                                    class="dropdown-item-icon mdi mdi-account-card-details me-2"
-                                    style="color: #009440"></i> Perfil
-                                <!--                                <span class="badge badge-pill badge-danger">1</span>-->
-                            </a>
-                            <!--                            <a class="dropdown-item"><i-->
-                            <!--                                    class="dropdown-item-icon mdi mdi-message-text-outline text-primary me-2"></i> Messages</a>-->
-                            <!--                            <a class="dropdown-item"><i-->
-                            <!--                                    class="dropdown-item-icon mdi mdi-calendar-check-outline text-primary me-2"></i> Activity</a>-->
-                            <!--                            <a class="dropdown-item"><i-->
-                            <!--                                    class="dropdown-item-icon mdi mdi-help-circle-outline text-primary me-2"></i> FAQ</a>-->
-                            <form action="#{request.contextPath}/logout" method="post">
-
-                                <div class="ui-inputgroup dropdown-item">
-                                    <i class="dropdown-item-icon pi pi-sign-out"
-                                       style="color: #009440; z-index: 10"/>
-                                    <input type="submit" style="margin-left: -17px; border: none; margin-right: -17px;"
-                                           class="dropdown-item ui-button-flat" value="Cerrar Sesi&oacute;n">
-                                    </input>
-                                </div>
-                                <input type="hidden"
-                                       name="${_csrf.parameterName}"
-                                       value="${_csrf.token}"/>
-                            </form>
-                            <!--                            <a class="dropdown-item"><i-->
-                            <!--                                    class="dropdown-item-icon mdi mdi-power text-primary me-2"></i>Sign Out</a>-->
-                        </div>
-                    </li>
                 </ul>
                 <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
                         data-bs-toggle="offcanvas">
@@ -217,195 +140,26 @@
                     </div>
                 </div>
             </div>
-            <div id="right-sidebar" class="settings-panel">
-                <i class="settings-close ti-close"></i>
-                <ul class="nav nav-tabs border-top" id="setting-panel" role="tablist">
-                    <li class="nav-item">
-                        <a class="nav-link active" id="todo-tab" data-bs-toggle="tab" href="#todo-section" role="tab"
-                           aria-controls="todo-section" aria-expanded="true">TO DO LIST</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="chats-tab" data-bs-toggle="tab" href="#chats-section" role="tab"
-                           aria-controls="chats-section">CHATS</a>
-                    </li>
-                </ul>
-                <div class="tab-content" id="setting-content">
-                    <div class="tab-pane fade show active scroll-wrapper" id="todo-section" role="tabpanel"
-                         aria-labelledby="todo-section">
-                        <div class="add-items d-flex px-3 mb-0">
-                            <form class="form w-100">
-                                <div class="form-group d-flex">
-                                    <input type="text" class="form-control todo-list-input" placeholder="Add To-do"/>
-                                    <button type="submit" class="add btn btn-primary todo-list-add-btn"
-                                            id="add-task">Add
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="list-wrapper px-3">
-                            <ul class="d-flex flex-column-reverse todo-list">
-                                <li>
-                                    <div class="form-check">
-                                        <label class="form-check-label">
-                                            <input class="checkbox" type="checkbox"/>
-                                            Team review meeting at 3.00 PM
-                                        </label>
-                                    </div>
-                                    <i class="remove ti-close"></i>
-                                </li>
-                                <li>
-                                    <div class="form-check">
-                                        <label class="form-check-label">
-                                            <input class="checkbox" type="checkbox"/>
-                                            Prepare for presentation
-                                        </label>
-                                    </div>
-                                    <i class="remove ti-close"></i>
-                                </li>
-                                <li>
-                                    <div class="form-check">
-                                        <label class="form-check-label">
-                                            <input class="checkbox" type="checkbox"/>
-                                            Resolve all the low priority tickets due today
-                                        </label>
-                                    </div>
-                                    <i class="remove ti-close"></i>
-                                </li>
-                                <li class="completed">
-                                    <div class="form-check">
-                                        <label class="form-check-label">
-                                            <input class="checkbox" type="checkbox"/>
-                                            Schedule meeting for next week
-                                        </label>
-                                    </div>
-                                    <i class="remove ti-close"></i>
-                                </li>
-                                <li class="completed">
-                                    <div class="form-check">
-                                        <label class="form-check-label">
-                                            <input class="checkbox" type="checkbox"/>
-                                            Project review
-                                        </label>
-                                    </div>
-                                    <i class="remove ti-close"></i>
-                                </li>
-                            </ul>
-                        </div>
-                        <h4 class="px-3 text-muted mt-5 fw-light mb-0">Events</h4>
-                        <div class="events pt-4 px-3">
-                            <div class="wrapper d-flex mb-2">
-                                <i class="ti-control-record text-primary me-2"></i>
-                                <span>Feb 11 2018</span>
-                            </div>
-                            <p class="mb-0 font-weight-thin text-gray">Creating component page build a js</p>
-                            <p class="text-gray mb-0">The total number of sessions</p>
-                        </div>
-                        <div class="events pt-4 px-3">
-                            <div class="wrapper d-flex mb-2">
-                                <i class="ti-control-record text-primary me-2"></i>
-                                <span>Feb 7 2018</span>
-                            </div>
-                            <p class="mb-0 font-weight-thin text-gray">Meeting with Alisa</p>
-                            <p class="text-gray mb-0 ">Call Sarah Graves</p>
-                        </div>
-                    </div>
-                    <!-- To do section tab ends -->
-                    <div class="tab-pane fade" id="chats-section" role="tabpanel" aria-labelledby="chats-section">
-                        <div class="d-flex align-items-center justify-content-between border-bottom">
-                            <p class="settings-heading border-top-0 mb-3 pl-3 pt-0 border-bottom-0 pb-0">Friends</p>
-                            <small class="settings-heading border-top-0 mb-3 pt-0 border-bottom-0 pb-0 pr-3 fw-normal">See All</small>
-                        </div>
-                        <ul class="chat-list">
-                            <li class="list active">
-                                <div class="profile"><img src="../../images/faces/face1.jpg" alt="image"/><span
-                                        class="online"></span></div>
-                                <div class="info">
-                                    <p>Thomas Douglas</p>
-                                    <p>Available</p>
-                                </div>
-                                <small class="text-muted my-auto">19 min</small>
-                            </li>
-                            <li class="list">
-                                <div class="profile"><img src="../../images/faces/face2.jpg" alt="image"/><span
-                                        class="offline"></span></div>
-                                <div class="info">
-                                    <div class="wrapper d-flex">
-                                        <p>Catherine</p>
-                                    </div>
-                                    <p>Away</p>
-                                </div>
-                                <div class="badge badge-success badge-pill my-auto mx-2">4</div>
-                                <small class="text-muted my-auto">23 min</small>
-                            </li>
-                            <li class="list">
-                                <div class="profile"><img src="../../images/faces/face3.jpg" alt="image"/><span
-                                        class="online"></span></div>
-                                <div class="info">
-                                    <p>Daniel Russell</p>
-                                    <p>Available</p>
-                                </div>
-                                <small class="text-muted my-auto">14 min</small>
-                            </li>
-                            <li class="list">
-                                <div class="profile"><img src="../../images/faces/face4.jpg" alt="image"/><span
-                                        class="offline"></span></div>
-                                <div class="info">
-                                    <p>James Richardson</p>
-                                    <p>Away</p>
-                                </div>
-                                <small class="text-muted my-auto">2 min</small>
-                            </li>
-                            <li class="list">
-                                <div class="profile"><img src="../../images/faces/face5.jpg" alt="image"/><span
-                                        class="online"></span></div>
-                                <div class="info">
-                                    <p>Madeline Kennedy</p>
-                                    <p>Available</p>
-                                </div>
-                                <small class="text-muted my-auto">5 min</small>
-                            </li>
-                            <li class="list">
-                                <div class="profile"><img src="../../images/faces/face6.jpg" alt="image"/><span
-                                        class="online"></span></div>
-                                <div class="info">
-                                    <p>Sarah Graves</p>
-                                    <p>Available</p>
-                                </div>
-                                <small class="text-muted my-auto">47 min</small>
-                            </li>
-                        </ul>
-                    </div>
-                    <!-- chat tab ends -->
-                </div>
-            </div>
+
             <!-- partial -->
             <!-- partial:../../partials/_sidebar.html -->
             <nav class="sidebar sidebar-offcanvas" id="sidebar">
                 <ul class="nav">
-                    <li class="nav-item nav-category"
-                        style="#{templateBean.translateRole_visible(templateBean.role_admin, templateBean.role_secretario_general)}">Administraci&oacute;n
+                    <li class="nav-item nav-category">Utilities
                     </li>
                     <!--Administrar-->
-                    <li class="nav-item"
-                        style="#{templateBean.translateRole_visible(templateBean.role_admin, templateBean.role_secretario_general)}">
+                    <li class="nav-item">
                         <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false"
                            aria-controls="ui-basic">
                             <i class="menu-icon pi pi-cog"></i>
-                            <span class="menu-title">Administrar</span>
+                            <span class="menu-title">Admin</span>
                             <i class="menu-arrow"></i>
                         </a>
                         <div class="collapse" id="ui-basic">
-                            <ul class="nav flex-column sub-menu"
-                                style="#{templateBean.translateRole_visible(templateBean.role_admin)}">
+                            <ul class="nav flex-column sub-menu">
                                 <li class="nav-item">
                                     <a class="nav-link"
-                                       href="#{request.contextPath}/pages/adminPages/AdminCarreraNacional.xhtml">Carrera Nacional</a>
-                                </li>
-                            </ul>
-                            <ul class="nav flex-column sub-menu"
-                                style="#{templateBean.translateRole_visible(templateBean.role_admin)}">
-                                <li class="nav-item"><a class="nav-link"
-                                                        href="#{request.contextPath}/pages/adminPages/AdminColorPiel.xhtml">Color Piel</a>
+                                       href="#{request.contextPath}/index.xhtml">Admin Contacts</a>
                                 </li>
                             </ul>
                         </div>

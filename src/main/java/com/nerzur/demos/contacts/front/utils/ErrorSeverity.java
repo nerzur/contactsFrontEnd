@@ -25,7 +25,7 @@ public class ErrorSeverity {
         }
         catch (Exception ex){
             return ErrorSeverity.builder()
-                    .summary("410")
+                    .summary("400")
                     .content("An error has been occurred")
                     .build();
         }
